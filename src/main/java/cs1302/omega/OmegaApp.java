@@ -114,9 +114,6 @@ public class OmegaApp extends Application {
         cats();
         mergeArrays();
 
-
-//        fullArray = catArray + dogArray;
-
         Text txt = new Text("Welcome to Saathvik Rukkannagari's Prove you're not a Robot Captcha!");
         Font font = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 16);
         txt.setFont(font);
@@ -137,48 +134,13 @@ public class OmegaApp extends Application {
         txt.setTextAlignment(TextAlignment.CENTER);
 
         Button button = new Button("Press Me!");
-
-//        Image picture = new Image(dogArray[5]);
-        //      ImageView img = new ImageView(picture);
-
-
-        //  pane.setAlignment(Pos.CENTER);
         pane.getChildren().addAll(txt, txt2, txt3, button);
-        // pane.getChildren().add(img);
         pane.setAlignment(Pos.CENTER);
         pane.setPadding(new Insets(15));
         Scene scene = new Scene(new Group(pane), Color.BEIGE);
 
 
-
-
-/*
-        EventHandler<ActionEvent> startButton = new EventHandler<ActionEvent>() {
-                public void handle(ActionEvent e) {
-
-                    Runnable run = () -> {
-                        grid();
-                        System.out.println("hello");
-
-                        Stage newWindow = new Stage();
-                        newWindow.setTitle("Second Stage");
-                        Scene newScene = new Scene(new Group(grid));
-                        newWindow.setScene(newScene);
-
-                        newWindow.show();
-
-
-                    };
-                    Thread search = new Thread(run);
-                    search.setDaemon(true);
-                    search.start();
-                }
-            };
-*/
-
         button.setOnAction(new EventHandler<ActionEvent>() {
-
-                // images = new ImageView[20];
 
                 @Override
                 public void handle(ActionEvent event) {
@@ -213,38 +175,30 @@ public class OmegaApp extends Application {
                     newText = new Text("Round " + round + " : Click on the dogs to prove you are not a robot.");
                     Font font = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 12);
                     newText.setFont(font);
-                    // newText.setWrappingWidth(565);
                     newText.setTextAlignment(TextAlignment.CENTER);
 
                     newPane = new VBox();
                     newPane.setAlignment(Pos.CENTER);
 
                     newPane.getChildren().addAll(newText, grid, submit);
-
                     Scene secondScene = new Scene(newPane);
 
-                    // New window (Stage)
                     newWindow = new Stage();
                     newWindow.setMaxWidth(1280);
                     newWindow.setMaxHeight(720);
                     newWindow.setTitle("Prove You Are Not A Robot!");
                     newWindow.setScene(secondScene);
 
-                    // Set position of second window, related to primary window.
-                    //            newWindow.setX(primaryStage.getX() + 200);
-                    // newWindow.setY(primaryStage.getY() + 100);
-
                     newWindow.show();
                     stage.close();
                     failWindow.close();
+                    congratsWindow.close();
                 }
             });
 
 
         close.setOnAction(new EventHandler<ActionEvent>() {
-
                 public void handle(ActionEvent event) {
-
                     System.exit(0);
 
                 }
@@ -254,54 +208,61 @@ public class OmegaApp extends Application {
                 @Override
                 public void handle(ActionEvent event) {
 
-                    if ((dogCount == 4 || dogCount == 5 || dogCount == 6) && catCount == 0) {
+                    if ((dogCount > 4) && catCount == 0) {
 
                         VBox congrats = new VBox();
                         Text finalTxt = new Text("You have proved you are not a robot!");
                         Font font = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 12);
                         finalTxt.setFont(font);
-
                         finalTxt.setTextAlignment(TextAlignment.CENTER);
+
+                        Text finalTxt2 = new Text("If you want to prove it again press Try Again.");
+                        finalTxt2.setFont(font);
+                        finalTxt2.setTextAlignment(TextAlignment.CENTER);
+
 
                         Image image = new Image("file:resources/success.jpg");
 
                         ImageView imgView = new ImageView(image);
-                        congrats.getChildren().addAll(finalTxt, imgView);
+                        button.setText("Try Again");
+                        congrats.getChildren().addAll(finalTxt, finalTxt2, imgView, button);
 
+                        congrats.setAlignment(Pos.CENTER);
                         Scene congratsScene = new Scene(congrats);
 
-                        // New window (Stage)
                         congratsWindow = new Stage();
                         congratsWindow.setMaxWidth(1280);
                         congratsWindow.setMaxHeight(720);
                         congratsWindow.setTitle("Congratulations!");
                         congratsWindow.setScene(congratsScene);
 
-                        // Set position of second window, related to primary window.
-                        //            newWindow.setX(primaryStage.getX() + 200);
-                        // newWindow.setY(primaryStage.getY() + 100);
-
                         congratsWindow.show();
                         newWindow.close();
+
 
                     } else {
 
                         if (round == 3) {
                             VBox fail = new VBox();
-
                             Text failTxt = new Text("It has been determined you are a robot.");
                             Font failFont = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 12);
                             failTxt.setFont(failFont);
                             failTxt.setTextAlignment(TextAlignment.CENTER);
 
+                            Text retry = new Text("If you want to retry press Change My Mind.");
+                            retry.setFont(failFont);
+                            retry.setTextAlignment(TextAlignment.CENTER);
+
+
                             Image failure = new Image("file:resources/robot.jpg", 400, 400, false, false);
                             ImageView failImg = new ImageView(failure);
 
+                            button.setText("Change My Mind");
                             HBox buttons = new HBox();
                             buttons.getChildren().addAll(close, button);
                             buttons.setAlignment(Pos.CENTER);
 
-                            fail.getChildren().addAll(failTxt, failImg, buttons);
+                            fail.getChildren().addAll(failTxt, retry, failImg, buttons);
                             fail.setAlignment(Pos.CENTER);
                             Scene failScene = new Scene(fail);
                             failWindow = new Stage();
@@ -331,7 +292,6 @@ public class OmegaApp extends Application {
                                 images[x].setPickOnBounds(true);
                                 images[x].setOnMouseClicked(newImageHandler(images[x]));
 
-
                                 grid.add(images[x], y, z);
 
                                 y++;
@@ -345,9 +305,6 @@ public class OmegaApp extends Application {
 
                 }
             });
-
-
-
 
         stage.setMaxWidth(1280);
         stage.setMaxHeight(720);
@@ -364,20 +321,15 @@ public class OmegaApp extends Application {
         return newEvent -> {
             image.setOpacity(0.5);
             image.setOnMouseClicked(null);
-            // System.out.println("sup");
 
             String url;
             url = image.getImage().getUrl();
-            System.out.println(url);
 
             if (url.contains("cat")) {
-                // System.out.println("yes");
                 catCount++;
             }
             if (url.contains("dog")) {
-
                 dogCount++;
-                //  System.out.println(dogCount);
             }
         };
     }
