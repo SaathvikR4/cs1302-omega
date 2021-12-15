@@ -58,7 +58,16 @@ import static cs1302.api.Tools.UTF8;
 import javafx.scene.layout.Priority;
 
 /**
- * REPLACE WITH NON-SHOUTING DESCRIPTION OF YOUR APP.
+ * This app is meant to imitate a Prove you are not a robot
+ * Capctha Application. The application has three rounds for you to
+ * prove that you are indeed a human. In order to pass the Capctha the
+ * user must select at least 5 dogs within the board and 0 cats. If the
+ * requirments are met then the application will present a congratulation
+ * screen or otherwise a failure screen which both present the option to
+ * retry the Captcha.
+ *
+ * Dr. Cotterell approved this application on the bases that the images
+ * downloaded from the two queries were changed after every round.
  */
 public class OmegaApp extends Application {
 
@@ -95,6 +104,7 @@ public class OmegaApp extends Application {
     private Button close = new Button("Close");
     private Stage congratsWindow;
     private Stage failWindow;
+
     /**
      * Constructs an {@code OmegaApp} object. This default (i.e., no argument)
      * constructor is executed in Step 2 of the JavaFX Application Life-Cycle.
@@ -167,12 +177,13 @@ public class OmegaApp extends Application {
                         grid.add(images[x], y, z);
 
                         y++;
-                        if (y==4) {
+                        if (y == 4) {
                             z++;
                             y = 0;
                         }
                     }
-                    newText = new Text("Round " + round + " : Click on the dogs to prove you are not a robot.");
+                    newText = new Text("Round " + round + " : Click on the dogs" +
+                        " to prove you are not a robot.");
                     Font font = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 12);
                     newText.setFont(font);
                     newText.setTextAlignment(TextAlignment.CENTER);
@@ -225,7 +236,12 @@ public class OmegaApp extends Application {
 
                         ImageView imgView = new ImageView(image);
                         button.setText("Try Again");
-                        congrats.getChildren().addAll(finalTxt, finalTxt2, imgView, button);
+
+                        HBox closing = new HBox(10);
+                        closing.setAlignment(Pos.CENTER);
+                        closing.getChildren().addAll(close, button);
+
+                        congrats.getChildren().addAll(finalTxt, finalTxt2, imgView, closing);
 
                         congrats.setAlignment(Pos.CENTER);
                         Scene congratsScene = new Scene(congrats);
@@ -245,7 +261,8 @@ public class OmegaApp extends Application {
                         if (round == 3) {
                             VBox fail = new VBox();
                             Text failTxt = new Text("It has been determined you are a robot.");
-                            Font failFont = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 12);
+                            Font failFont = Font.font("verd" +
+                                "ana", FontWeight.BOLD, FontPosture.REGULAR, 12);
                             failTxt.setFont(failFont);
                             failTxt.setTextAlignment(TextAlignment.CENTER);
 
@@ -254,11 +271,12 @@ public class OmegaApp extends Application {
                             retry.setTextAlignment(TextAlignment.CENTER);
 
 
-                            Image failure = new Image("file:resources/robot.jpg", 400, 400, false, false);
+                            Image failure = new Image("file:resources" +
+                                "/robot.jpg", 400, 400, false, false);
                             ImageView failImg = new ImageView(failure);
 
                             button.setText("Change My Mind");
-                            HBox buttons = new HBox();
+                            HBox buttons = new HBox(10);
                             buttons.getChildren().addAll(close, button);
                             buttons.setAlignment(Pos.CENTER);
 
@@ -283,11 +301,13 @@ public class OmegaApp extends Application {
                             int y = 0;
                             String object;
 
-                            newText.setText("Round " + round + " : Click on the dogs to prove you are not a robot.");
+                            newText.setText("Round " + round + ": " +
+                                "Click on the dogs to prove you are not a robot.");
                             for (int x = 0; x < 12; x++) {
                                 object = fullArray[(int)Math.floor(Math.random() * 49)];
 
-                                Image picture = new Image(object, DEF_WIDTH, DEF_HEIGHT, false, false);
+                                Image picture = new Image(object,
+                                    DEF_WIDTH, DEF_HEIGHT, false, false);
                                 images[x] = new ImageView(picture);
                                 images[x].setPickOnBounds(true);
                                 images[x].setOnMouseClicked(newImageHandler(images[x]));
@@ -295,7 +315,7 @@ public class OmegaApp extends Application {
                                 grid.add(images[x], y, z);
 
                                 y++;
-                                if (y==4) {
+                                if (y == 4) {
                                     z++;
                                     y = 0;
                                 }
@@ -317,6 +337,12 @@ public class OmegaApp extends Application {
         });
     } // start
 
+    /**
+     * Method to allow image view variables to be effectively final
+     * in order to change within eventhandler.
+     * @param image the image view to be altered.
+     * @return newEvent the mouseEvent to be applied to the imageView.
+     */
     private EventHandler<MouseEvent> newImageHandler(ImageView image) {
         return newEvent -> {
             image.setOpacity(0.5);
@@ -337,7 +363,6 @@ public class OmegaApp extends Application {
 
     /**
      * JSON method to store all of the cat images in the query.
-     * @param input the query to be searched.
      */
     public void cats() {
 
@@ -363,11 +388,6 @@ public class OmegaApp extends Application {
                 catLink = get(root, x, "image", "url").getAsString();
                 catArray[x] = catLink;
             }
-
-            System.out.println(catArray[12]);
-            System.out.println(catArray[20]);
-
-
         } catch (IOException ioe) {
             System.out.println(ioe);
             System.out.println("cats exception");
@@ -380,7 +400,6 @@ public class OmegaApp extends Application {
 
     /**
      * JSON method to store all of the dog images in the query.
-     * @param input the query to be searched.
      */
     public void dogs() {
 
@@ -413,6 +432,9 @@ public class OmegaApp extends Application {
         } // try
     }
 
+    /**
+     * Method to merge the dog and cat arrays into one array.
+     */
     public void mergeArrays() {
 
         for (int x = 0; x < dogArray.length; x++) {
@@ -421,40 +443,8 @@ public class OmegaApp extends Application {
         for (int y = 0; y < catArray.length; y++) {
             fullArray[y + 30] = catArray[y];
         }
-        System.out.println(fullArray[59]);
     }
 
-    public void grid() {
 
-        int z = 0;
-        int y = 0;
-        String object;
-        images = new ImageView[20];
-        grid = new GridPane();
-        grid.setHgap(5);
-        grid.setVgap(5);
-        for (int x = 0; x < 20; x++) {
-            object = fullArray[(int)Math.floor(Math.random() * 49)];
-
-            Image picture = new Image(object, DEF_WIDTH, DEF_HEIGHT, false, false);
-            images[x] = new ImageView(picture);
-            images[x].setPickOnBounds(true);
-            images[x].setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-                    public void handle(MouseEvent event) {
-                        System.out.println("sup");
-                    }
-                });
-
-            grid.add(images[x], y, z);
-
-            y++;
-            if (y==5) {
-                z++;
-                y = 0;
-            }
-        }
-
-    }
 
 } // OmegaApp
